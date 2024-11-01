@@ -1,0 +1,38 @@
+Name: securedrop-workstation-repo
+Version: @VERSION@
+Release: @REL@%{?dist}
+
+Summary: SecureDrop Workstation package repository and keyring
+License: GPLv2+
+URL: https://www.qubes-os.org/
+
+Source0: %{name}-%{version}.tar.gz
+
+# For reproducible builds:
+# [snip]
+
+BuildArch:		noarch
+BuildRequires:  keyrings-filesystem
+Requires:       keyrings-filesystem
+
+%description
+This package contains the SecureDrop Release public key and yum .repo file
+used to bootstrap installation of SecureDrop Workstation.
+
+%prep
+%setup -q
+
+%build
+# No building necessary
+
+%install
+install -m 755 -d %{buildroot}/etc/yum.repos.d
+install -m 755 -d %{buildroot}/etc/pki/rpm-gpg
+install -m 644 %{_builddir}/files/securedrop-workstation-dom0.repo %{buildroot}/etc/yum.repos.d/
+install -m 644 %{_builddir}/files/securedrop-release-signing-pubkey-2021.asc %{buildroot}/etc/pki/rpm-gpg/RPM-GPG-KEY-securedrop-workstation
+
+%files
+%{_keyringsdir}/*.gpg
+
+%changelog
+@CHANGELOG@
